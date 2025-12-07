@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>千方村口 | 轮滑艺术个人站</title>
+    <style>
+        /* 基础风格：荧光绿+黑色，适配logo调性 */
+        :root {
+            --neon-green: #00ff9d;
+            --neon-purple: #d400ff;
+            --black: #000;
+            --gray: #222;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: "Consolas", "微软雅黑", sans-serif; 
+            background: var(--black); 
+            color: #fff;
+            overflow-x: hidden;
+            position: relative; /* 为轨迹动画做容器 */
+        }
+
+        /* 轮滑轨迹动画：页面滚动时生成荧光轨迹 */
+        .skate-trail {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background: var(--neon-green);
+            border-radius: 50%;
+            filter: blur(3px);
+            pointer-events: none;
+            z-index: 999;
+            opacity: 0.8;
+            animation: trail-fade 1s forwards;
+        }
+        @keyframes trail-fade {
+            0% { opacity: 0.8; transform: scale(1); }
+            100% { opacity: 0; transform: scale(1.5); }
+        }
+
+        /* 导航栏：荧光绿边框+悬浮动画 */
+        nav {
+            padding: 2rem 5%;
+            border-bottom: 2px solid var(--neon-green);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+            z-index: 10;
+        }
+        .logo {
+            font-size: 1.8rem;
+            color: var(--neon-green);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        .nav-links a {
+            color: #fff;
+            text-decoration: none;
+            margin-left: 2rem;
+            font-size: 1.1rem;
+            transition: color 0.3s;
+        }
+        .nav-links a:hover { color: var(--neon-green); }
+
+        /* 首页Banner：logo放大+动态光效+滚动旋转 */
+        .banner {
+            height: 80vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            z-index: 1;
+        }
+        .banner-logo {
+            width: 300px;
+            height: 300px;
+            margin-bottom: 2rem;
+            filter: drop-shadow(0 0 15px var(--neon-green));
+            animation: glow 2s infinite alternate;
+            transition: transform 0.5s ease; /* 滚动时旋转的过渡 */
+        }
+        .banner h1 {
+            font-size: 3rem;
+            color: var(--neon-green);
+            letter-spacing: 5px;
+        }
+        .banner p {
+            color: #aaa;
+            font-size: 1.2rem;
+            margin-top: 1rem;
+        }
+        @keyframes glow {
+            0% { filter: drop-shadow(0 0 10px var(--neon-green)); }
+            100% { filter: drop-shadow(0 0 20px var(--neon-green)) drop-shadow(0 0 10px var(--neon-purple)); }
+        }
+
+        /* 作品集：网格布局+轮滑动态卡片 */
+        .section { padding: 5rem 5%; position: relative; z-index: 1; }
+        .section-title {
+            font-size: 2.5rem;
+            color: var(--neon-green);
+            margin-bottom: 3rem;
+            border-left: 5px solid var(--neon-green);
+            padding-left: 1rem;
+        }
+        .works-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+        .work-card {
+            background: var(--gray);
+            border-radius: 8px;
+            overflow: hidden;
+            transition: transform 0.3s, box-shadow 0.3s;
+            border: 1px solid transparent;
+        }
+        .work-card:hover {
+            transform: translateY(-10px) rotate(1deg);
+            box-shadow: 0 0 20px var(--neon-green);
+            border-color: var(--neon-green);
+        }
+        .work-img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+        .work-info { padding: 1.5rem; }
+        .work-info h3 {
+            color: var(--neon-green);
+            margin-bottom: 0.5rem;
+        }
+        .work-info p { color: #ccc; }
+
+        /* 视频展示：响应式播放器+荧光边框 */
+        .video-container {
+            max-width: 800px;
+            margin: 0 auto;
+            border: 2px solid var(--neon-green);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        video { width: 100%; }
+
+        /* 论坛：简洁列表+发帖表单 */
+        .forum-section {
+            background: var(--gray);
+            padding: 2rem;
+            border-radius: 8px;
+            margin-top: 2rem;
+        }
+        .post-list { list-style: none; margin-bottom: 2rem; }
+        .post-item {
+            padding: 1.5rem;
+            border-bottom: 1px solid #444;
+        }
+        .post-item:last-child { border-bottom: none; }
+        .post-item h4 {
+            color: var(--neon-green);
+            margin-bottom: 0.5rem;
+        }
+        .post-item p { color: #ccc; }
+        .post-form input, .post-form textarea {
+            width: 100%;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            background: var(--black);
+            border: 1px solid var(--neon-green);
+            border-radius: 4px;
+            color: #fff;
+            font-family: inherit;
+        }
+        .post-form button {
+            padding: 1rem 2rem;
+            background: var(--neon-green);
+            color: var(--black);
+            border: none;
+            border-radius: 4px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        .post-form button:hover { background: #00e08a; }
+
+        /* 页脚 */
+        footer {
+            text-align: center;
+            padding: 2rem;
+            border-top: 2px solid var(--neon-green);
+            margin-top: 5rem;
+            color: #aaa;
+            position: relative;
+            z-index: 1;
+        }
+    </style>
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav>
+        <div class="logo">QIAN FANG CUN KOU</div>
+        <div class="nav-links">
+            作品集
+            视频
+            论坛
+        </div>
+    </nav>
+
+    <!-- 首页Banner -->
+    <div class="banner">
+        < img src="logo.png" alt="千方村口Logo" class="banner-logo">
+        <h1>轮滑艺术实验场</h1>
+        <p>用轮滑轨迹绘制城市肌理</p >
+    </div>
+
+    <!-- 作品集板块 -->
+    <section class="section" id="works">
+        <h2 class="section-title">作品集</h2>
+        <div class="works-grid">
+            <div class="work-card">
+                < img src="work1.jpg" alt="轮滑轨迹涂鸦" class="work-img">
+                <div class="work-info">
+                    <h3>《轨迹共生》</h3>
+                    <p>用轮滑鞋轮涂抹颜料，在城市街道留下动态涂鸦，记录10公里滑行轨迹。</p >
+                </div>
+            </div>
+            <div class="work-card">
+                < img src="work2.jpg" alt="轮滑装置艺术" class="work-img">
+                <div class="work-info">
+                    <h3>《轮与光》</h3>
+                    <p>轮滑鞋内置LED灯，夜间滑行时形成光轨，配合城市建筑构成动态装置。</p >
+                </div>
+            </div>
+            <div class="work-card">
+                < img src="work3.jpg" alt="轮滑行为艺术" class="work-img">
+                <div class="work-info">
+                    <h3>《街头惯性》</h3>
+                    <p>在城市广场进行连续2小时的轮滑行为表演，探讨运动与空间的关系。</p >
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 视频展示板块 -->
+    <section class="section" id="video">
+        <h2 class="section-title">视频作品</h2>
+        <div class="video-container">
+            <video controls poster="video-poster.jpg">
+                <source src="skate-art.mp4" type="video/mp4">
+                您的浏览器不支持视频播放
+            </video>
+        </div>
+        <p style="text-align: center; margin-top: 1rem; color: #aaa;">《轮滑光轨实录》：夜间滑行时的LED轨迹记录</p >
+    </section>
+
+    <!-- 论坛板块 -->
+    <section class="section" id="forum">
+        <h2 class="section-title">轮滑艺术论坛</h2>
+        <div class="forum-section">
+            <ul class="post-list">
+                <li class="post-item">
+                    <h4>如何选择轮滑鞋的颜料材质？</h4>
+                    <p>想尝试轨迹涂鸦，但不知道哪种颜料既耐磨又容易清洗？求推荐！</p >
+                    <p style="font-size: 0.9rem; color: #888; margin-top: 0.5rem;">作者：滑行爱好者 | 2025-12-07</p >
+                </li>
+                <li class="post-item">
+                    <h4>光轨装置的电源怎么解决？</h4>
+                    <p>轮滑鞋装LED灯需要轻便的电源，有没有体积小、续航久的方案？</p >
+                    <p style="font-size: 0.9rem; color: #888; margin-top: 0.5rem;">作者：光轨实验者 | 2025-12-06</p >
+                </li>
+            </ul>
+            <form class="post-form">
+                <input type="text" placeholder="标题" required>
+                <textarea placeholder="内容" required></textarea>
+                <button type="submit">发布新帖</button>
+            </form>
+        </div>
+    </section>
+
+    <!-- 页脚 -->
+    <footer>
+        <p>© 2025 前方村口 | 轮滑艺术个人站</p >
+    </footer>
+
+    <!-- 轮滑轨迹+logo滚动动画 -->
+    <script>
+        // 1. 平滑滚动
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', e => {
+                e.preventDefault();
+                const target = document.querySelector(link.getAttribute('href'));
+                target.scrollIntoView({ behavior: 'smooth' });
+            });
+        });
+
+        // 2. 轮滑轨迹跟随（滚动/鼠标移动时生成荧光轨迹）
+        let lastX = 0, lastY = 0;
+        function createTrail(x, y) {
+            const trail = document.createElement('div');
+            trail.classList.add('skate-trail');
+            trail.style.left = `${x}px`;
+            trail.style.top = `${y}px`;
+            document.body.appendChild(trail);
+            
+            // 1秒后移除轨迹元素，避免DOM堆积
+            setTimeout(() => trail.remove(), 1000);
+        }
+
+        // 监听鼠标移动生成轨迹
+        document.addEventListener('mousemove', (e) => {
+            // 限制轨迹生成频率，避免过多元素
+            if (Math.abs(e.clientX - lastX) > 10 || Math.abs(e.clientY - lastY) > 10) {
+                createTrail(e.clientX, e.clientY);
+                lastX = e.clientX;
+                lastY = e.clientY;
+            }
+        });
+
+        // 监听页面滚动生成轨迹（模拟轮滑滑行轨迹）
+        window.addEventListener('scroll', () => {
+            const scrollY = window.scrollY;
+            // 按滚动进度生成轨迹（横向随机，纵向随滚动）
+            const randomX = Math.random() * window.innerWidth;
+            createTrail(randomX, scrollY + 200);
+        });
+
+        // 3. Banner Logo随滚动旋转
+        const bannerLogo = document.querySelector('.banner-logo');
+        window.addEventListener('scroll', () => {
+            const scrollProgress = window.scrollY / (document.body.scrollHeight - window.innerHeight);
+            // 滚动时Logo旋转（最大15度）
+            bannerLogo.style.transform = `rotate(${scrollProgress * 15}deg)`;
+        });
+    </script>
+</body>
+</html>
